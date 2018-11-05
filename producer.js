@@ -12,15 +12,17 @@ void async function () {
     // exchange 타입에 의해 정의된 룰에 따라 큐들에게 메시지를 보낸다.
     // 메시지를 받기 위해선 하나의 큐는 반드시 적어도 하나 이상의 Exchange 에 바인딩되어야 한다.
     // Binding: 바인딩은 Exchange 와 큐 간의 연결을 의미한다.
-    const exchangeName = 'testEx';
+    const exchangeName = 'my_topic';
     await channel.assertExchange(exchangeName, 'topic', {
         durable: false,
-        autoDelete: true,
+        autoDelete: false,
     });
 
     // Routing key: 라우팅키는 exchange가 queue들에게 메시지를 라우팅하는 방법을 결정한다.
     // 라우팅키는 일종의 메시지를 위한 주소라고 볼 수 있다.
-    const routingKey = 'aaa';
+    // 라우팅키는 . 으로 구분되고, 각 위치에 반드시 단어가 있어야 한다면 *
+    // 없어도 된다면 # 으로 패턴 매칭을 할 수 있다.
+    const routingKey = 'my_route';
 
     for (let i=0; i<10; i++) {
         const data = Buffer.from(JSON.stringify({

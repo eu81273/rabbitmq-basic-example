@@ -1,16 +1,16 @@
 const amqp = require('amqplib');
-const sleep = (timeout = 3600000) => new Promise(resolve => setTimeout(resolve, timeout));
 
+// consumer: 메시지를 소비하는 앱
 void async function () {
     const connection = await amqp.connect('amqp://localhost');
     const channel = await connection.createChannel();
 
     // Exchange: Exchange 는 프로듀서에게 메시지를 받아서
     // exchange 타입에 의해 정의된 룰에 따라 큐들에게 메시지를 보낸다.
-    const exchangeName = 'testExBr';
+    const exchangeName = 'my_fanout';
     await channel.assertExchange(exchangeName, 'fanout', {
         durable: false,
-        autoDelete: true,
+        autoDelete: false,
     });
 
     // Routing key: 라우팅키는 exchange가 queue들에게 메시지를 라우팅하는 방법을 결정한다.
@@ -20,11 +20,11 @@ void async function () {
 
     // Queue: 메시지를 저장하는 버퍼
     // Message: RabbitMQ 통해 프로듀서가 컨슈머에게 보내는 정보
-    const queueName = 'testqBr';
+    const queueName = 'my_fanout_queue';
     await channel.assertQueue(queueName, {
         exclusive: false, // 독점적인 queue들은 오직 현재 연결에 의해서만 소비될 수 있다. 'exclusive' 를 설정하면 항상 'autoDelete'를 의미한다.
         durable: false, // 브로커 재시작시에도 큐를 살린다. exclusive 와 autoDelete 를 자동 활성화
-        autoDelete: true, // 컨슈머가 없으면 자동으로 큐 삭제
+        autoDelete: false, // 컨슈머가 없으면 자동으로 큐 삭제
         messageTtl: 10000, // 10초 뒤 자동 삭제
         maxLength: 10, // 최신 10개 메시지만 저장가능
     });

@@ -12,15 +12,14 @@ void async function () {
     // exchange 타입에 의해 정의된 룰에 따라 큐들에게 메시지를 보낸다.
     // 메시지를 받기 위해선 하나의 큐는 반드시 적어도 하나 이상의 Exchange 에 바인딩되어야 한다.
     // Binding: 바인딩은 Exchange 와 큐 간의 연결을 의미한다.
-    const exchangeName = 'testExBr';
+    const exchangeName = 'my_fanout';
     await channel.assertExchange(exchangeName, 'fanout', { 
         durable: false,
-        autoDelete: true,
+        autoDelete: false,
     });
 
     // Routing key: 라우팅키는 exchange가 queue들에게 메시지를 라우팅하는 방법을 결정한다.
     // 라우팅키는 일종의 메시지를 위한 주소라고 볼 수 있다.
-    // fanout 의 경우 바인딩된 모든 큐에 메시지를 보내므로 라우팅키의 의미가 없다.
     const routingKey = '';
 
     for (let i=0; i<100; i++) {
