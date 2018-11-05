@@ -18,17 +18,18 @@ void async function () {
         autoDelete: false,
     });
 
-    // Routing key: 라우팅키는 exchange가 queue들에게 메시지를 라우팅하는 방법을 결정한다.
-    // 라우팅키는 일종의 메시지를 위한 주소라고 볼 수 있다.
-    // 라우팅키는 . 으로 구분되고, 각 위치에 반드시 단어가 있어야 한다면 *
-    // 없어도 된다면 # 으로 패턴 매칭을 할 수 있다.
-    const routingKey = 'my_route';
-
     for (let i=0; i<10; i++) {
         const data = Buffer.from(JSON.stringify({
             id: i,
             text: i + '번 메시지 입니다'
         }));
+
+        // Routing key: 라우팅키는 exchange가 queue들에게 메시지를 라우팅하는 방법을 결정한다.
+        // 라우팅키는 일종의 메시지를 위한 주소라고 볼 수 있다.
+        // 라우팅키는 . 으로 구분되고, 각 위치에 반드시 단어가 있어야 한다면 *
+        // 없어도 된다면 # 으로 패턴 매칭을 할 수 있다.
+        const routingKey = 'my_route.' + i;
+
         channel.publish(exchangeName, routingKey, data, { persistent: true })
         console.log(i + '번 메시지 발송');
     }
