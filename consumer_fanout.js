@@ -37,7 +37,6 @@ void async function () {
         try {
             if (message) {
                 console.log(message.content.toString());
-                
             }
         } catch (e) {
             console.error(e);
